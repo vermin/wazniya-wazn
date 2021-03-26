@@ -1,3 +1,4 @@
+// Copyright (c) 2020-2021 Wazniya
 // Copyright (c) 2014-2018, MyMonero.com
 //
 // All rights reserved.

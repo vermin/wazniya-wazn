@@ -1,21 +1,22 @@
+// Copyright (c) 2019-2021 WAZN Project
 // Copyright (c) 2014-2020, The Monero Project
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +26,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
@@ -38,7 +39,7 @@
 #include "crypto/hash.h"
 #include "rpc/rpc_handler.h"
 #include "common/varint.h"
-// #include "common/perf_timer.h"
+#include "common/perf_timer.h"
 
 namespace
 {
@@ -88,7 +89,7 @@ namespace cryptonote
 // advance which version they will stop working with
 // Don't go over 32767 for any of these
 #define CORE_RPC_VERSION_MAJOR 3
-#define CORE_RPC_VERSION_MINOR 2
+#define CORE_RPC_VERSION_MINOR 5
 #define MAKE_CORE_RPC_VERSION(major,minor) (((major)<<16)|(minor))
 #define CORE_RPC_VERSION MAKE_CORE_RPC_VERSION(CORE_RPC_VERSION_MAJOR, CORE_RPC_VERSION_MINOR)
 
@@ -301,17 +302,17 @@ namespace cryptonote
         BEGIN_KV_SERIALIZE_MAP()
           KV_SERIALIZE(address)
           KV_SERIALIZE(view_key)
-          KV_SERIALIZE(tx)  
+          KV_SERIALIZE(tx)
         END_KV_SERIALIZE_MAP()
       };
       typedef epee::misc_utils::struct_init<request_t> request;
-    
-      
+
+
       struct response_t
       {
         std::string status;
         std::string error;
-        
+
         BEGIN_KV_SERIALIZE_MAP()
           KV_SERIALIZE(status)
           KV_SERIALIZE(error)
@@ -622,8 +623,8 @@ namespace cryptonote
         KV_SERIALIZE_PARENT(rpc_request_base)
         KV_SERIALIZE(miner_address)
         KV_SERIALIZE(threads_count)
-        KV_SERIALIZE(do_background_mining)        
-        KV_SERIALIZE(ignore_battery)        
+        KV_SERIALIZE(do_background_mining)
+        KV_SERIALIZE(ignore_battery)
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
@@ -684,7 +685,9 @@ namespace cryptonote
       bool was_bootstrap_ever_used;
       uint64_t database_size;
       bool update_available;
+      bool busy_syncing;
       std::string version;
+      bool synchronized;
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_access_response_base)
@@ -723,13 +726,15 @@ namespace cryptonote
         KV_SERIALIZE(was_bootstrap_ever_used)
         KV_SERIALIZE(database_size)
         KV_SERIALIZE(update_available)
+        KV_SERIALIZE(busy_syncing)
         KV_SERIALIZE(version)
+        KV_SERIALIZE(synchronized)
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
 
-    
+
   //-----------------------------------------------
   struct COMMAND_RPC_GET_NET_STATS
   {
@@ -855,7 +860,7 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-  
+
   //
   struct COMMAND_RPC_GETBLOCKCOUNT
   {
@@ -937,7 +942,7 @@ namespace cryptonote
   struct COMMAND_RPC_SUBMITBLOCK
   {
     typedef std::vector<std::string> request;
-    
+
     struct response_t: public rpc_response_base
     {
       BEGIN_KV_SERIALIZE_MAP()
@@ -965,12 +970,12 @@ namespace cryptonote
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
-    
+
     struct response_t: public rpc_response_base
     {
       uint64_t height;
       std::vector<std::string> blocks;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_response_base)
         KV_SERIALIZE(height)
@@ -979,7 +984,7 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-  
+
   struct block_header_response
   {
       uint8_t major_version;
@@ -1004,7 +1009,7 @@ namespace cryptonote
       std::string pow_hash;
       uint64_t long_term_weight;
       std::string miner_tx_hash;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(major_version)
         KV_SERIALIZE(minor_version)
@@ -1047,7 +1052,7 @@ namespace cryptonote
     struct response_t: public rpc_access_response_base
     {
       block_header_response block_header;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_access_response_base)
         KV_SERIALIZE(block_header)
@@ -1056,7 +1061,7 @@ namespace cryptonote
     typedef epee::misc_utils::struct_init<response_t> response;
 
   };
-  
+
   struct COMMAND_RPC_GET_BLOCK_HEADER_BY_HASH
   {
     struct request_t: public rpc_access_request_base
@@ -1078,7 +1083,7 @@ namespace cryptonote
     {
       block_header_response block_header;
       std::vector<block_header_response> block_headers;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_access_response_base)
         KV_SERIALIZE(block_header)
@@ -1106,7 +1111,7 @@ namespace cryptonote
     struct response_t: public rpc_access_response_base
     {
       block_header_response block_header;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_access_response_base)
         KV_SERIALIZE(block_header)
@@ -1139,7 +1144,7 @@ namespace cryptonote
       std::vector<std::string> tx_hashes;
       std::string blob;
       std::string json;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_access_response_base)
         KV_SERIALIZE(block_header)
@@ -1191,10 +1196,12 @@ namespace cryptonote
     struct request_t: public rpc_request_base
     {
       bool public_only;
+      bool include_blocked;
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_request_base)
         KV_SERIALIZE_OPT(public_only, true)
+        KV_SERIALIZE_OPT(include_blocked, false)
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
@@ -1240,11 +1247,13 @@ namespace cryptonote
     {
       bool gray;
       bool white;
+      bool include_blocked;
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_request_base)
         KV_SERIALIZE_OPT(gray, false)
         KV_SERIALIZE_OPT(white, true)
+        KV_SERIALIZE_OPT(include_blocked, false)
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
@@ -1560,7 +1569,7 @@ namespace cryptonote
     struct response_t: public rpc_response_base
     {
       std::list<connection_info> connections;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_response_base)
         KV_SERIALIZE(connections)
@@ -1643,7 +1652,7 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-  
+
   struct COMMAND_RPC_FAST_EXIT
   {
     struct request_t: public rpc_request_base
@@ -1653,7 +1662,7 @@ namespace cryptonote
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
-    
+
     struct response_t: public rpc_response_base
     {
       BEGIN_KV_SERIALIZE_MAP()
@@ -1662,7 +1671,7 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-  
+
   struct COMMAND_RPC_GET_LIMIT
   {
     struct request_t: public rpc_request_base
@@ -1672,12 +1681,12 @@ namespace cryptonote
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
-    
+
     struct response_t: public rpc_response_base
     {
       uint64_t limit_up;
       uint64_t limit_down;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_response_base)
         KV_SERIALIZE(limit_up)
@@ -1686,14 +1695,14 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-  
+
   struct COMMAND_RPC_SET_LIMIT
   {
     struct request_t: public rpc_request_base
     {
       int64_t limit_down;  // all limits (for get and set) are kB/s
       int64_t limit_up;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_request_base)
         KV_SERIALIZE(limit_down)
@@ -1701,12 +1710,12 @@ namespace cryptonote
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
-    
+
     struct response_t: public rpc_response_base
     {
       int64_t limit_up;
       int64_t limit_down;
-      
+
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE_PARENT(rpc_response_base)
         KV_SERIALIZE(limit_up)
@@ -1715,7 +1724,7 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-  
+
   struct COMMAND_RPC_OUT_PEERS
   {
     struct request_t: public rpc_request_base
@@ -1730,7 +1739,7 @@ namespace cryptonote
       END_KV_SERIALIZE_MAP()
     };
     typedef epee::misc_utils::struct_init<request_t> request;
-    
+
     struct response_t: public rpc_response_base
     {
       uint32_t out_peers;
@@ -1768,7 +1777,7 @@ namespace cryptonote
     };
     typedef epee::misc_utils::struct_init<response_t> response;
   };
-    
+
   struct COMMAND_RPC_HARD_FORK_INFO
   {
     struct request_t: public rpc_access_request_base

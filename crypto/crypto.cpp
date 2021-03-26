@@ -1,21 +1,22 @@
+// Copyright (c) 2019-2021 WAZN Project
 // Copyright (c) 2014-2020, The Monero Project
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +26,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #include <unistd.h>
@@ -123,13 +124,17 @@ namespace crypto {
   void random32_unbiased(unsigned char *bytes)
   {
     // l = 2^252 + 27742317777372353535851937790883648493.
-    // it fits 15 in 32 bytes
+    // l fits 15 times in 32 bytes (iow, 15 l is the highest multiple of l that fits in 32 bytes)
     static const unsigned char limit[32] = { 0xe3, 0x6a, 0x67, 0x72, 0x8b, 0xce, 0x13, 0x29, 0x8f, 0x30, 0x82, 0x8c, 0x0b, 0xa4, 0x10, 0x39, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0 };
-    do
+    while(1)
     {
       generate_random_bytes_thread_safe(32, bytes);
-    } while (!sc_isnonzero(bytes) && !less32(bytes, limit)); // should be good about 15/16 of the time
-    sc_reduce32(bytes);
+      if (!less32(bytes, limit))
+        continue;
+      sc_reduce32(bytes);
+      if (sc_isnonzero(bytes))
+        break;
+    }
   }
   /* generate a random 32-byte (256-bit) integer and copy it to res */
   static inline void random_scalar(ec_scalar &res) {
@@ -141,10 +146,10 @@ namespace crypto {
     sc_reduce32(&res);
   }
 
-  /* 
+  /*
    * generate public and secret keys from a random 256-bit integer
    * TODO: allow specifying random value (for wallet recovery)
-   * 
+   *
    */
   secret_key crypto_ops::generate_keys(public_key &pub, secret_key &sec, const secret_key& recovery_key, bool recover) {
     ge_p3 point;
@@ -380,11 +385,11 @@ namespace crypto {
     // pick random k
     ec_scalar k;
     random_scalar(k);
-    
+
     s_comm_2_v1 buf;
     buf.msg = prefix_hash;
     buf.D = D;
-    
+
     if (B)
     {
       // compute X = k*B
@@ -399,13 +404,13 @@ namespace crypto {
       ge_scalarmult_base(&X_p3, &k);
       ge_p3_tobytes(&buf.X, &X_p3);
     }
-    
+
     // compute Y = k*A
     ge_p2 Y_p2;
     ge_scalarmult(&Y_p2, &k, &A_p3);
     ge_tobytes(&buf.Y, &Y_p2);
 
-    // sig.c = Hs(Msg || D || X || Y) 
+    // sig.c = Hs(Msg || D || X || Y)
     hash_to_scalar(&buf, sizeof(buf), sig.c);
 
     // sig.r = k - sig.c*r
@@ -456,7 +461,7 @@ namespace crypto {
     // pick random k
     ec_scalar k;
     random_scalar(k);
-    
+
     // if B is not present
     static const ec_point zero = {{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }};
 
@@ -470,7 +475,7 @@ namespace crypto {
     else
         buf.B = zero;
     cn_fast_hash(config::HASH_KEY_TXPROOF_V2, sizeof(config::HASH_KEY_TXPROOF_V2)-1, buf.sep);
-    
+
     if (B)
     {
       // compute X = k*B
@@ -485,13 +490,13 @@ namespace crypto {
       ge_scalarmult_base(&X_p3, &k);
       ge_p3_tobytes(&buf.X, &X_p3);
     }
-    
+
     // compute Y = k*A
     ge_p2 Y_p2;
     ge_scalarmult(&Y_p2, &k, &A_p3);
     ge_tobytes(&buf.Y, &Y_p2);
 
-    // sig.c = Hs(Msg || D || X || Y || sep || R || A || B) 
+    // sig.c = Hs(Msg || D || X || Y || sep || R || A || B)
     hash_to_scalar(&buf, sizeof(buf), sig.c);
 
     // sig.r = k - sig.c*r

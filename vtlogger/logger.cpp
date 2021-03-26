@@ -1,3 +1,4 @@
+// Copyright (c) 2020-2021 Wazniya
 // Copyright (c) 2014-2018, MyMonero.com
 //
 // All rights reserved.
@@ -99,4 +100,3 @@ bool logger::formatter_base::log(const info src) const {
     out << std::endl;
     return out.good();
 }
-

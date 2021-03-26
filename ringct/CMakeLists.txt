@@ -1,3 +1,4 @@
+# Copyright (c) 2019-2021 WAZN Project
 # Copyright (c) 2016-2020, The Monero Project
 #
 # All rights reserved.
@@ -30,16 +31,18 @@ set(ringct_basic_sources
   rctOps.cpp
   rctTypes.cpp
   rctCryptoOps.c
+  multiexp.cc
   bulletproofs.cc)
 
 set(ringct_basic_private_headers
   rctOps.h
   rctTypes.h
+  multiexp.h
   bulletproofs.h)
 
-monero_private_headers(ringct_basic
+wazn_private_headers(ringct_basic
   ${crypto_private_headers})
-monero_add_library(ringct_basic
+wazn_add_library(ringct_basic
   ${ringct_basic_sources}
   ${ringct_basic_private_headers})
 target_link_libraries(ringct_basic
@@ -60,9 +63,9 @@ set(ringct_private_headers
   rctSigs.h
 )
 
-monero_private_headers(ringct
+wazn_private_headers(ringct
   ${crypto_private_headers})
-monero_add_library(ringct
+wazn_add_library(ringct
   ${ringct_sources}
   ${ringct_headers}
   ${ringct_private_headers})

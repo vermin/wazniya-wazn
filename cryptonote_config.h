@@ -1,21 +1,22 @@
+// Copyright (c) 2019-2021 WAZN Project
 // Copyright (c) 2014-2020, The Monero Project
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list
 //    of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-// 
+//
 // 3. Neither the name of the copyright holder nor the names of its contributors may be
 //    used to endorse or promote products derived from this software without specific
 //    prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
@@ -25,7 +26,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
 #pragma once
@@ -37,7 +38,7 @@
 #define CRYPTONOTE_DNS_TIMEOUT_MS                       20000
 
 #define CRYPTONOTE_MAX_BLOCK_NUMBER                     500000000
-#define CRYPTONOTE_MAX_TX_SIZE                          1000000
+#define CRYPTONOTE_MAX_TX_SIZE                          100000000
 #define CRYPTONOTE_MAX_TX_PER_BLOCK                     0x10000000
 #define CRYPTONOTE_PUBLIC_ADDRESS_TEXTBLOB_VER          0
 #define CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW            60
@@ -50,9 +51,9 @@
 #define BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW               60
 
 // MONEY_SUPPLY - total number coins to be generated
-#define MONEY_SUPPLY                                    ((uint64_t)(-1))
+#define MONEY_SUPPLY                                    ((uint64_t)(100000000000000000))
 #define EMISSION_SPEED_FACTOR_PER_MINUTE                (20)
-#define FINAL_SUBSIDY_PER_MINUTE                        ((uint64_t)300000000000) // 3 * pow(10, 11)
+#define FINAL_SUBSIDY_PER_MINUTE                        ((uint64_t)30000000000) // 3 * pow(10, 10)
 
 #define CRYPTONOTE_REWARD_BLOCKS_WINDOW                 100
 #define CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2    60000 //size of block (bytes) after which reward for block calculated using block size
@@ -61,9 +62,9 @@
 #define CRYPTONOTE_LONG_TERM_BLOCK_WEIGHT_WINDOW_SIZE   100000 // size in blocks of the long term block weight median window
 #define CRYPTONOTE_SHORT_TERM_BLOCK_WEIGHT_SURGE_FACTOR 50
 #define CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE          600
-#define CRYPTONOTE_DISPLAY_DECIMAL_POINT                12
+#define CRYPTONOTE_DISPLAY_DECIMAL_POINT                9
 // COIN - number of smallest units in one coin
-#define COIN                                            ((uint64_t)1000000000000) // pow(10, 12)
+#define COIN                                            ((uint64_t)1000000000) // pow(10, 9)
 
 #define FEE_PER_KB_OLD                                  ((uint64_t)10000000000) // pow(10, 10)
 #define FEE_PER_KB                                      ((uint64_t)2000000000) // 2 * pow(10, 9)
@@ -71,14 +72,14 @@
 #define DYNAMIC_FEE_PER_KB_BASE_FEE                     ((uint64_t)2000000000) // 2 * pow(10,9)
 #define DYNAMIC_FEE_PER_KB_BASE_BLOCK_REWARD            ((uint64_t)10000000000000) // 10 * pow(10,12)
 #define DYNAMIC_FEE_PER_KB_BASE_FEE_V5                  ((uint64_t)2000000000 * (uint64_t)CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2 / CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V5)
-#define DYNAMIC_FEE_REFERENCE_TRANSACTION_WEIGHT         ((uint64_t)3000)
+#define DYNAMIC_FEE_REFERENCE_TRANSACTION_WEIGHT        ((uint64_t)3000)
 
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 
 
 #define DIFFICULTY_TARGET_V2                            120  // seconds
-#define DIFFICULTY_TARGET_V1                            60  // seconds - before first fork
-#define DIFFICULTY_WINDOW                               720 // blocks
+#define DIFFICULTY_TARGET_V1                            120  // seconds
+#define DIFFICULTY_WINDOW                               360 // blocks
 #define DIFFICULTY_LAG                                  15  // !!!
 #define DIFFICULTY_CUT                                  60  // timestamps to cut after sorting
 #define DIFFICULTY_BLOCKS_COUNT                         DIFFICULTY_WINDOW + DIFFICULTY_LAG
@@ -93,6 +94,7 @@
 
 
 #define BLOCKS_IDS_SYNCHRONIZING_DEFAULT_COUNT          10000  //by default, blocks ids count in synchronizing
+#define BLOCKS_IDS_SYNCHRONIZING_MAX_COUNT              25000  //max blocks ids count in synchronizing
 #define BLOCKS_SYNCHRONIZING_DEFAULT_COUNT_PRE_V4       100    //by default, blocks count in blocks downloading
 #define BLOCKS_SYNCHRONIZING_DEFAULT_COUNT              20     //by default, blocks count in blocks downloading
 #define BLOCKS_SYNCHRONIZING_MAX_COUNT                  2048   //must be a power of 2, greater than 128, equal to SEEDHASH_EPOCH_BLOCKS
@@ -102,11 +104,11 @@
 
 
 #define CRYPTONOTE_DANDELIONPP_STEMS              2 // number of outgoing stem connections per epoch
-#define CRYPTONOTE_DANDELIONPP_FLUFF_PROBABILITY 10 // out of 100
+#define CRYPTONOTE_DANDELIONPP_FLUFF_PROBABILITY 20 // out of 100
 #define CRYPTONOTE_DANDELIONPP_MIN_EPOCH         10 // minutes
 #define CRYPTONOTE_DANDELIONPP_EPOCH_RANGE       30 // seconds
 #define CRYPTONOTE_DANDELIONPP_FLUSH_AVERAGE      5 // seconds average for poisson distributed fluff flush
-#define CRYPTONOTE_DANDELIONPP_EMBARGO_AVERAGE  173 // seconds (see tx_pool.cpp for more info)
+#define CRYPTONOTE_DANDELIONPP_EMBARGO_AVERAGE   39 // seconds (see tx_pool.cpp for more info)
 
 // see src/cryptonote_protocol/levin_notify.cpp
 #define CRYPTONOTE_NOISE_MIN_EPOCH                      5      // minutes
@@ -123,15 +125,17 @@
 
 #define CRYPTONOTE_MAX_FRAGMENTS                        20 // ~20 * NOISE_BYTES max payload size for covert/noise send
 
-#define COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT           1000
+#define COMMAND_RPC_GET_BLOCKS_FAST_MAX_BLOCK_COUNT     1000
+#define COMMAND_RPC_GET_BLOCKS_FAST_MAX_TX_COUNT        20000
 
 #define P2P_LOCAL_WHITE_PEERLIST_LIMIT                  1000
 #define P2P_LOCAL_GRAY_PEERLIST_LIMIT                   5000
 
-#define P2P_DEFAULT_CONNECTIONS_COUNT                   8
+#define P2P_DEFAULT_CONNECTIONS_COUNT                   12
 #define P2P_DEFAULT_HANDSHAKE_INTERVAL                  60           //secondes
 #define P2P_DEFAULT_PACKET_MAX_SIZE                     50000000     //50000000 bytes maximum packet size
 #define P2P_DEFAULT_PEERS_IN_HANDSHAKE                  250
+#define P2P_MAX_PEERS_IN_HANDSHAKE                      250
 #define P2P_DEFAULT_CONNECTION_TIMEOUT                  5000       //5 seconds
 #define P2P_DEFAULT_SOCKS_CONNECT_TIMEOUT               45         // seconds
 #define P2P_DEFAULT_PING_CONNECTION_TIMEOUT             2000       //2 seconds
@@ -153,7 +157,7 @@
 
 #define RPC_IP_FAILS_BEFORE_BLOCK                       3
 
-#define CRYPTONOTE_NAME                         "bitmonero"
+#define CRYPTONOTE_NAME                         "wazn"
 #define CRYPTONOTE_BLOCKCHAINDATA_FILENAME      "data.mdb"
 #define CRYPTONOTE_BLOCKCHAINDATA_LOCK_FILENAME "lock.mdb"
 #define P2P_NET_DATA_FILENAME                   "p2pstate.bin"
@@ -191,73 +195,74 @@
 #define CRYPTONOTE_PRUNING_STRIPE_SIZE          4096 // the smaller, the smoother the increase
 #define CRYPTONOTE_PRUNING_LOG_STRIPES          3 // the higher, the more space saved
 #define CRYPTONOTE_PRUNING_TIP_BLOCKS           5500 // the smaller, the more space saved
-//#define CRYPTONOTE_PRUNING_DEBUG_SPOOF_SEED
 
 #define RPC_CREDITS_PER_HASH_SCALE ((float)(1<<24))
+
+#define DNS_BLOCKLIST_LIFETIME (86400 * 8)
 
 // New constants are intended to go here
 namespace config
 {
-  uint64_t const DEFAULT_FEE_ATOMIC_XMR_PER_KB = 500; // Just a placeholder!  Change me!
+  uint64_t const DEFAULT_FEE_ATOMIC_WAZN_PER_KB = 500; // Just a placeholder!  Change me!
   uint8_t const FEE_CALCULATION_MAX_RETRIES = 10;
   uint64_t const DEFAULT_DUST_THRESHOLD = ((uint64_t)2000000000); // 2 * pow(10, 9)
   uint64_t const BASE_REWARD_CLAMP_THRESHOLD = ((uint64_t)100000000); // pow(10, 8)
 
-  uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 18;
-  uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 19;
-  uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 42;
-  uint16_t const P2P_DEFAULT_PORT = 18080;
-  uint16_t const RPC_DEFAULT_PORT = 18081;
-  uint16_t const ZMQ_RPC_DEFAULT_PORT = 18082;
+  uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 0x77130;                // starts with "WazN"
+  uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 0x2fab30;    // starts with "WaZN"
+  uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 0x3bab30;            // starts with "WaZn"
+  uint16_t const P2P_DEFAULT_PORT = 11786;
+  uint16_t const RPC_DEFAULT_PORT = 11787;
+  uint16_t const ZMQ_RPC_DEFAULT_PORT = 11788;
   boost::uuids::uuid const NETWORK_ID = { {
-      0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x10
-    } }; // Bender's nightmare
-  std::string const GENESIS_TX = "013c01ff0001ffffffffffff03029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd08807121017767aafcde9be00dcfd098715ebcf7f410daebc582fda69d24a28e9d0bc890d1";
+        0xC6, 0x04, 0xDB, 0x3A, 0x33, 0x8A, 0x47, 0xDE, 0xB9, 0x4D, 0x5C, 0xD7, 0x5B, 0xD6, 0xCC, 0x57
+    } };
+  std::string const GENESIS_TX = "013c01ff0003b1bfb4de02029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd0880718088aca3cf02022a74a3c4c36d32e95633d44ba9a7b8188297b2ac91afecab826b86fabaa7091680d0dbc3f4020252d128bc9913d5ee8b702c37609917c2357b2f587e5de5622348a3acd718e5d621012cfac44dd60d88cd77f59819e5524ff0a0fe56488ceb413f3b6d201a40791376";
   uint32_t const GENESIS_NONCE = 10000;
 
   // Hash domain separators
   const char HASH_KEY_BULLETPROOF_EXPONENT[] = "bulletproof";
   const char HASH_KEY_RINGDB[] = "ringdsb";
   const char HASH_KEY_SUBADDRESS[] = "SubAddr";
-  const unsigned char HASH_KEY_ENCRYPTED_PAYMENT_ID = 0x8d;
-  const unsigned char HASH_KEY_WALLET = 0x8c;
-  const unsigned char HASH_KEY_WALLET_CACHE = 0x8d;
-  const unsigned char HASH_KEY_RPC_PAYMENT_NONCE = 0x58;
+  const unsigned char HASH_KEY_ENCRYPTED_PAYMENT_ID = 0x97;
+  const unsigned char HASH_KEY_WALLET = 0x96;
+  const unsigned char HASH_KEY_WALLET_CACHE = 0x97;
+  const unsigned char HASH_KEY_RPC_PAYMENT_NONCE = 0x42;
   const unsigned char HASH_KEY_MEMORY = 'k';
   const unsigned char HASH_KEY_MULTISIG[] = {'M', 'u', 'l', 't' , 'i', 's', 'i', 'g', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
   const unsigned char HASH_KEY_TXPROOF_V2[] = "TXPROOF_V2";
   const unsigned char HASH_KEY_CLSAG_ROUND[] = "CLSAG_round";
   const unsigned char HASH_KEY_CLSAG_AGG_0[] = "CLSAG_agg_0";
   const unsigned char HASH_KEY_CLSAG_AGG_1[] = "CLSAG_agg_1";
-  const char HASH_KEY_MESSAGE_SIGNING[] = "MoneroMessageSignature";
+  const char HASH_KEY_MESSAGE_SIGNING[] = "WaznMessageSignature";
 
   namespace testnet
   {
-    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 53;
-    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 54;
-    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 63;
-    uint16_t const P2P_DEFAULT_PORT = 28080;
-    uint16_t const RPC_DEFAULT_PORT = 28081;
-    uint16_t const ZMQ_RPC_DEFAULT_PORT = 28082;
+    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 0x9dd32;               // starts with "Wtst"
+    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 0x5d32;     // starts with "Wts"
+    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 0x5eb2;             // starts with "Wt"
+    uint16_t const P2P_DEFAULT_PORT = 22786;
+    uint16_t const RPC_DEFAULT_PORT = 22787;
+    uint16_t const ZMQ_RPC_DEFAULT_PORT = 22788;
     boost::uuids::uuid const NETWORK_ID = { {
-        0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x11
-      } }; // Bender's daydream
-    std::string const GENESIS_TX = "013c01ff0001ffffffffffff03029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd08807121017767aafcde9be00dcfd098715ebcf7f410daebc582fda69d24a28e9d0bc890d1";
+        0xC6, 0x04, 0xDB, 0x3A, 0x33, 0x8A, 0x47, 0xDE, 0xB9, 0x4D, 0x5C, 0xD7, 0x5B, 0xD6, 0xCC, 0x58
+      } };
+    std::string const GENESIS_TX = "013c01ff0003b1bfb4de02029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd0880718088aca3cf02022a74a3c4c36d32e95633d44ba9a7b8188297b2ac91afecab826b86fabaa7091680d0dbc3f4020252d128bc9913d5ee8b702c37609917c2357b2f587e5de5622348a3acd718e5d62101abeeb68d50ee2b41e852558e234a81815bc73c482484a77ede4e5f25eb69022d";
     uint32_t const GENESIS_NONCE = 10001;
   }
 
   namespace stagenet
   {
-    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 24;
-    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 25;
-    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 36;
-    uint16_t const P2P_DEFAULT_PORT = 38080;
-    uint16_t const RPC_DEFAULT_PORT = 38081;
-    uint16_t const ZMQ_RPC_DEFAULT_PORT = 38082;
+    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 0x81032;               // starts with "Wstg"
+    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 0x5032;     // starts with "Wst"
+    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 0x51b2;             // starts with "Ws"
+    uint16_t const P2P_DEFAULT_PORT = 33786;
+    uint16_t const RPC_DEFAULT_PORT = 33787;
+    uint16_t const ZMQ_RPC_DEFAULT_PORT = 33788;
     boost::uuids::uuid const NETWORK_ID = { {
-        0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x12
-      } }; // Bender's daydream
-    std::string const GENESIS_TX = "013c01ff0001ffffffffffff0302df5d56da0c7d643ddd1ce61901c7bdc5fb1738bfe39fbe69c28a3a7032729c0f2101168d0c4ca86fb55a4cf6a36d31431be1c53a3bd7411bb24e8832410289fa6f3b";
+        0xC6, 0x04, 0xDB, 0x3A, 0x33, 0x8A, 0x47, 0xDE, 0xB9, 0x4D, 0x5C, 0xD7, 0x5B, 0xD6, 0xCC, 0x59
+      } };
+    std::string const GENESIS_TX = "013c01ff0003b1bfb4de02029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd0880718088aca3cf02022a74a3c4c36d32e95633d44ba9a7b8188297b2ac91afecab826b86fabaa7091680d0dbc3f4020252d128bc9913d5ee8b702c37609917c2357b2f587e5de5622348a3acd718e5d621012fe83c4fbfe681a9727b8763065af40b10f0b3ffd7020b29af882ccababdd787";
     uint32_t const GENESIS_NONCE = 10002;
   }
 }
